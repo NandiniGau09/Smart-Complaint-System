@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Complaint Details</title>
+</head>
+<body>
+<h2>Complaint Details</h2>
+
+<p><b>ID:</b> <span th:text="${complaint.id}"></span></p>
+<p><b>Name:</b> <span th:text="${complaint.name}"></span></p>
+<p><b>Email:</b> <span th:text="${complaint.email}"></span></p>
+<p><b>Message:</b> <span th:text="${complaint.message}"></span></p>
+
+<a href="/complaints/list">Back to List</a>
+</body>
+</html>

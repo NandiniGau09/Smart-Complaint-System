@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <title>Complaint Received</title>
+</head>
+<body>
+<h3>Complaint Received</h3>
+<p>Dear <span th:text="${name}"></span>,</p>
+<p>We have received your complaint. Details:</p>
+<ul>
+    <li><b>ID:</b> <span th:text="${complaintId}"></span></li>
+    <li><b>Category:</b> <span th:text="${category}"></span></li>
+    <li><b>Description:</b> <span th:text="${description}"></span></li>
+</ul>
+<p>We will contact you at <span th:text="${email}"></span> with updates.</p>
+</body>
+</html>

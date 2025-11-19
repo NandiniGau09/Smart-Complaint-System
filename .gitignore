@@ -1,0 +1,63 @@
+# ======================
+# Maven & Spring Boot
+# ======================
+/target/
+*.class
+*.log
+*.jar
+*.war
+*.ear
+
+# Maven Wrapper
+.mvn/
+/mvnw
+/mvnw.cmd
+
+# ======================
+# IDE Settings
+# ======================
+
+# IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# Eclipse (STS)
+.settings/
+.project
+.classpath
+.springBeans/
+.sts4-cache/
+.apt_generated/
+
+# NetBeans
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+
+# VS Code
+.vscode/
+
+# ======================
+# System files
+# ======================
+.DS_Store
+Thumbs.db
+
+# ======================
+# OS & temp files
+# ======================
+*.tmp
+*.bak
+*.swp
+
+# ======================
+# H2 Database Files
+# ======================
+*.db
+*.mv.db
+*.h2.db
