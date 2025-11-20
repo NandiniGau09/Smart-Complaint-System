@@ -14,8 +14,7 @@ public class Complaint {
     private String name;
     private String email;
     private String phone;
-
-    private String address;   // ✅ NEW FIELD ADDED
+    private String address;
 
     @Column(columnDefinition = "TEXT")
     private String message;
@@ -23,7 +22,8 @@ public class Complaint {
     private String status = "Pending";
     private String department;
 
-    @Column(name = "created_at")   // allow insert + update
+    // ✅ Fix: Force MySQL DATETIME instead of datetime(6)
+    @Column(name = "created_at", columnDefinition = "DATETIME")
     private LocalDateTime createdAt;
 
     @PrePersist
@@ -33,79 +33,31 @@ public class Complaint {
         }
     }
 
-    // ---------------------------------
     // Getters & Setters
-    // ---------------------------------
-    public Long getId() {
-        return id;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
-    public String getName() {
-        return name;
-    }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public String getPhone() { return phone; }
+    public void setPhone(String phone) { this.phone = phone; }
 
-    public String getEmail() {
-        return email;
-    }
+    public String getAddress() { return address; }
+    public void setAddress(String address) { this.address = address; }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+    public String getMessage() { return message; }
+    public void setMessage(String message) { this.message = message; }
 
-    public String getPhone() {
-        return phone;
-    }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
+    public String getDepartment() { return department; }
+    public void setDepartment(String department) { this.department = department; }
 
-    // ⭐ NEW GETTER/SETTER
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getDepartment() {
-        return department;
-    }
-
-    public void setDepartment(String department) {
-        this.department = department;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 }
