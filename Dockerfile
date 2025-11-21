@@ -1,25 +1,22 @@
-# Use Java 17 runtime
 FROM eclipse-temurin:17-jdk
 
-# Set working directory in the container
+# Set working directory
 WORKDIR /app
 
-# Copy Maven wrapper and project files
+# Copy Maven wrapper files
 COPY .mvn/ .mvn
 COPY mvnw .
-COPY pom.xml .
+RUN chmod +x mvnw
 
-# Download all dependencies (this will speed up future builds)
+# Copy project files
+COPY pom.xml .
 RUN ./mvnw dependency:go-offline
 
-# Copy source code
+# Copy all source code
 COPY src ./src
 
-# Build application
-RUN ./mvnw package -DskipTests
+# Build the application
+RUN ./mvnw clean package -DskipTests
 
-# Expose port 8080
-EXPOSE 8080
-
-# Run the application
+# Run the Spring Boot JAR
 CMD ["java", "-jar", "target/complaintsystem-1.0.0.jar"]
