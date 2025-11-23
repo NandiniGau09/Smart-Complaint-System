@@ -1,12 +1,17 @@
 package com.smartcomplaint.complaintsystem.controller;
 
-import com.smartcomplaint.complaintsystem.model.Complaint;
-import com.smartcomplaint.complaintsystem.repository.ComplaintRepository;
-import com.smartcomplaint.complaintsystem.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.smartcomplaint.complaintsystem.model.Complaint;
+import com.smartcomplaint.complaintsystem.repository.ComplaintRepository;
+import com.smartcomplaint.complaintsystem.service.EmailService;
 
 @Controller
 @RequestMapping("/complaints")
@@ -31,23 +36,32 @@ public class ComplaintController {
 
         complaintRepository.save(complaint);
 
-        // Send email to user
         try {
-            String subject = "Your Complaint Has Been Received";
-            String message =
-                    "Hello " + complaint.getName() + ",\n\n" +
-                    "Your complaint has been successfully submitted.\n\n" +
-                    "Complaint Details:\n" +
-                    "------------------------------\n" +
-                    "Name: " + complaint.getName() + "\n" +
-                    "Email: " + complaint.getEmail() + "\n" +
-                    "Message: " + complaint.getMessage() + "\n\n" +
-                    "Thank you for reaching out.\n\n" +
-                    "Regards,\nComplaint Support Team";
+            System.out.println("🎯 Email sending STARTED...");
+            System.out.println("👉 To: " + complaint.getEmail());
 
-            emailService.sendEmail(complaint.getEmail(), subject, message);
+            String subject = "Your Complaint Has Been Received";
+
+            String message =
+                    "<p>Hello <strong>" + complaint.getName() + "</strong>,</p>"
+                            + "<p>Your complaint has been successfully submitted.</p>"
+                            + "<p><strong>Complaint Details:</strong><br>"
+                            + "Name: " + complaint.getName() + "<br>"
+                            + "Email: " + complaint.getEmail() + "<br>"
+                            + "Message: " + complaint.getMessage() + "</p>"
+                            + "<p>Thank you for reaching out.<br>"
+                            + "Regards,<br>Complaint Support Team</p>";
+
+            emailService.sendEmail(
+                    complaint.getEmail(),
+                    subject,
+                    message
+            );
+
+            System.out.println("✅ Email sending FINISHED");
+
         } catch (Exception e) {
-            System.out.println("Error sending email: " + e.getMessage());
+            System.out.println("❗ Error sending email: " + e.getMessage());
         }
 
         model.addAttribute("message", "Complaint submitted successfully!");
@@ -79,21 +93,21 @@ public class ComplaintController {
                 .orElse(null);
 
         if (complaint != null) {
-            // Send delete notification email
+
             try {
                 String subject = "Your Complaint Has Been Removed";
+
                 String message =
-                        "Hello " + complaint.getName() + ",\n\n" +
-                        "Your complaint has been deleted by the admin.\n\n" +
-                        "Regards,\nComplaint Support Team";
+                        "<p>Hello <strong>" + complaint.getName() + "</strong>,</p>"
+                                + "<p>Your complaint has been deleted by the admin.</p>"
+                                + "<p>Regards,<br>Complaint Support Team</p>";
 
                 emailService.sendEmail(complaint.getEmail(), subject, message);
 
             } catch (Exception e) {
-                System.out.println("Error sending delete email: " + e.getMessage());
+                System.out.println("❗ Error sending delete email: " + e.getMessage());
             }
 
-            // Delete from DB
             complaintRepository.deleteById(id);
         }
 
