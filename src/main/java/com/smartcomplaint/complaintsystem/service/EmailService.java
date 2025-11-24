@@ -45,6 +45,7 @@ public class EmailService {
         }
     }
 
+    /** EMAIL WHEN COMPLAINT IS CREATED **/
     public void sendComplaintReceived(
             String name,
             String email,
@@ -61,5 +62,22 @@ public class EmailService {
                         + "<p>We will get back to you soon.<br>Thank you.</p>";
 
         sendEmail(email, "Complaint Received - ID " + complaintId, body);
+    }
+
+    /** EMAIL WHEN STATUS IS UPDATED **/
+    public void sendStatusUpdated(
+            String name,
+            String email,
+            Long complaintId,
+            String newStatus) {
+
+        String body =
+                "<p>Hello <strong>" + name + "</strong>,</p>"
+                        + "<p>The status of your complaint has been updated.</p>"
+                        + "<p><strong>Complaint ID:</strong> " + complaintId + "<br>"
+                        + "<strong>New Status:</strong> " + newStatus + "</p>"
+                        + "<p>We will notify you of further updates.<br>Thank you.</p>";
+
+        sendEmail(email, "Complaint Status Updated - ID " + complaintId, body);
     }
 }

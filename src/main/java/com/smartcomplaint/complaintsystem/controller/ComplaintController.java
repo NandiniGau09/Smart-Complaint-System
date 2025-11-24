@@ -37,31 +37,17 @@ public class ComplaintController {
         complaintRepository.save(complaint);
 
         try {
-            System.out.println("🎯 Email sending STARTED...");
-            System.out.println("👉 To: " + complaint.getEmail());
-
-            String subject = "Your Complaint Has Been Received";
-
-            String message =
-                    "<p>Hello <strong>" + complaint.getName() + "</strong>,</p>"
-                            + "<p>Your complaint has been successfully submitted.</p>"
-                            + "<p><strong>Complaint Details:</strong><br>"
-                            + "Name: " + complaint.getName() + "<br>"
-                            + "Email: " + complaint.getEmail() + "<br>"
-                            + "Message: " + complaint.getMessage() + "</p>"
-                            + "<p>Thank you for reaching out.<br>"
-                            + "Regards,<br>Complaint Support Team</p>";
-
-            emailService.sendEmail(
+            emailService.sendComplaintReceived(
+                    complaint.getName(),
                     complaint.getEmail(),
-                    subject,
-                    message
+                    complaint.getId(),
+                    complaint.getDepartment(),
+                    complaint.getMessage()
             );
 
-            System.out.println("✅ Email sending FINISHED");
-
+            System.out.println("📩 Complaint received email sent");
         } catch (Exception e) {
-            System.out.println("❗ Error sending email: " + e.getMessage());
+            System.out.println("❗ Error sending complaint received email: " + e.getMessage());
         }
 
         model.addAttribute("message", "Complaint submitted successfully!");
@@ -83,6 +69,34 @@ public class ComplaintController {
 
         model.addAttribute("complaint", complaint);
         return "view_complaint";
+    }
+
+    // Update complaint status + send email
+    @PostMapping("/update-status/{id}")
+    public String updateComplaintStatus(@PathVariable Long id, @ModelAttribute Complaint updatedComplaint) {
+
+        Complaint complaint = complaintRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid complaint ID: " + id));
+
+        // set new status
+        complaint.setStatus(updatedComplaint.getStatus());
+        complaintRepository.save(complaint);
+
+        try {
+            emailService.sendStatusUpdated(
+                    complaint.getName(),
+                    complaint.getEmail(),
+                    complaint.getId(),
+                    complaint.getStatus()
+            );
+
+            System.out.println("📩 Status update email sent");
+
+        } catch (Exception e) {
+            System.out.println("❗ Error sending status update email: " + e.getMessage());
+        }
+
+        return "redirect:/complaints/list";
     }
 
     // Delete complaint + email

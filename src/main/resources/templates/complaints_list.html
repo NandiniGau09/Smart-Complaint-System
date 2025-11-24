@@ -1,96 +1,56 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
-    <meta charset="UTF-8">
-    <title>My Complaints</title>
-
-    <!-- Bootstrap -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
-
-    <style>
-        body {
-            background: linear-gradient(to bottom right, #e3f2fd, #bbdefb);
-            min-height: 100vh;
-        }
-
-        .table-container {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-
-        th {
-            background: #0d6efd !important;
-            color: white !important;
-            text-align: center;
-        }
-
-        td {
-            vertical-align: middle;
-        }
-
-        .badge-status {
-            font-size: 0.85rem;
-            padding: 6px 10px;
-            border-radius: 6px;
-        }
-
-        .btn-back {
-            border-radius: 8px;
-            padding: 8px 20px;
-        }
-    </style>
+    <title>Complaints List</title>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
 
 <body>
 
-<div class="container py-5">
-    <h2 class="text-center fw-bold mb-4">📋 My Complaints</h2>
+<div class="container mt-4">
+    <h2 class="text-center mb-4">All Complaints</h2>
 
-    <div class="table-container">
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Message</th>
+            <th>Status</th>
+            <th>Department</th>
+            <th>Created At</th>
+            <th>Update</th>
+            <th>Delete</th>
+        </tr>
+        </thead>
 
-        <table class="table table-hover table-striped text-center">
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Message</th>
-                <th>Department</th>
-                <th>Status</th>
-                <th>Address</th>
-                <th>Created At</th>
-            </tr>
-            </thead>
+        <tbody>
+        <tr th:each="c : ${complaints}">
+            <td th:text="${c.id}"></td>
+            <td th:text="${c.name}"></td>
+            <td th:text="${c.email}"></td>
+            <td th:text="${c.message}"></td>
+            <td th:text="${c.status}"></td>
+            <td th:text="${c.department}"></td>
+            <td th:text="${c.createdAt}"></td>
 
-            <tbody>
-            <tr th:each="complaint : ${complaints}">
-                <td th:text="${complaint.id}"></td>
-                <td th:text="${complaint.message}"></td>
-                <td th:text="${complaint.department}"></td>
+            <td>
+                <a th:href="@{/admin/complaints/edit/{id}(id=${c.id})}"
+                   class="btn btn-warning btn-sm">Edit</a>
+            </td>
 
-                <!-- Status Badge -->
-                <td>
-                    <span th:text="${complaint.status}"
-                          th:classappend="${
-                            complaint.status == 'Pending' ? 'badge bg-warning text-dark badge-status' :
-                            (complaint.status == 'In Progress' ? 'badge bg-primary badge-status' :
-                            (complaint.status == 'Resolved' ? 'badge bg-success badge-status' : 'badge bg-secondary badge-status'))
-                          }">
-                    </span>
-                </td>
+            <td>
+                <a th:href="@{/complaints/delete/{id}(id=${c.id})}"
+                   class="btn btn-danger btn-sm"
+                   onclick="return confirm('Are you sure?')">Delete</a>
+            </td>
+        </tr>
+        </tbody>
 
-                <td th:text="${complaint.address}"></td>
-
-                <td th:text="${#temporals.format(complaint.createdAt, 'dd-MM-yyyy  HH:mm')}"></td>
-            </tr>
-            </tbody>
-        </table>
-
-        <div class="text-end mt-3">
-            <a href="/" class="btn btn-secondary btn-back">⬅ Back to Home</a>
-        </div>
-
-    </div>
+    </table>
 </div>
 
 </body>

@@ -1,7 +1,14 @@
 package com.smartcomplaint.complaintsystem.model;
 
-import jakarta.persistence.*;
 import java.time.LocalDateTime;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "complaints")
@@ -22,7 +29,6 @@ public class Complaint {
     private String status = "Pending";
     private String department;
 
-    // ✅ Fix: Force MySQL DATETIME instead of datetime(6)
     @Column(name = "created_at", columnDefinition = "DATETIME")
     private LocalDateTime createdAt;
 
@@ -33,7 +39,10 @@ public class Complaint {
         }
     }
 
-    // Getters & Setters
+    // ===============================
+    // GETTERS & SETTERS (Required!)
+    // ===============================
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

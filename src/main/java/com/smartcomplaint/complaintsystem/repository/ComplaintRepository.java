@@ -1,11 +1,16 @@
 package com.smartcomplaint.complaintsystem.repository;
 
-import com.smartcomplaint.complaintsystem.model.Complaint;
-import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
-public interface ComplaintRepository extends JpaRepository<Complaint, Long> {
-    List<Complaint> findByStatus(String status);
-    List<Complaint> findByEmail(String email);
+import org.springframework.data.jpa.repository.JpaRepository;
 
+import com.smartcomplaint.complaintsystem.model.Complaint;
+
+public interface ComplaintRepository extends JpaRepository<Complaint, Long> {
+
+    // ✅ Find complaints by status (ex: Pending, Resolved etc.)
+    List<Complaint> findByStatus(String status);
+
+    // ✅ Find complaints by user email
+    List<Complaint> findByEmail(String email);
 }
