@@ -54,12 +54,22 @@ public class EmailService {
             String message) {
 
         String body =
-                "<p>Dear <strong>" + name + "</strong>,</p>"
-                        + "<p>Your complaint has been successfully registered.</p>"
-                        + "<p><strong>Complaint ID:</strong> " + complaintId + "<br>"
-                        + "<strong>Subject:</strong> " + subject + "<br>"
-                        + "<strong>Message:</strong> " + message + "</p>"
-                        + "<p>We will get back to you soon.<br>Thank you.</p>";
+                "<div style='font-family:Arial;background:#f4f4f4;padding:20px;'>"
+                        + "<div style='background:white;padding:20px;border-radius:8px;border:1px solid #ddd;'>"
+                        + "<h2 style='color:#0066cc;text-align:center;'>Your Complaint Has Been Received</h2>"
+                        + "<p>Hello <strong>" + name + "</strong>,</p>"
+                        + "<p>Your complaint has been successfully submitted.</p>"
+                        + "<hr>"
+                        + "<p><strong style='color:#000;'>Complaint ID:</strong> <span style='color:#d9534f'><strong>" + complaintId + "</strong></span></p>"
+                        + "<p><strong>Department:</strong> " + subject + "</p>"
+                        + "<p><strong>Message:</strong><br>" + message + "</p>"
+                        + "<hr>"
+                        + "<p style='font-size:13px;color:#777;text-align:center;'>"
+                        + "Thank you for reaching out.<br>"
+                        + "Complaint Support Team<br>"
+                        + "Smart Complaint System"
+                        + "</p>"
+                        + "</div></div>";
 
         sendEmail(email, "Complaint Received - ID " + complaintId, body);
     }
@@ -72,11 +82,22 @@ public class EmailService {
             String newStatus) {
 
         String body =
-                "<p>Hello <strong>" + name + "</strong>,</p>"
-                        + "<p>The status of your complaint has been updated.</p>"
-                        + "<p><strong>Complaint ID:</strong> " + complaintId + "<br>"
-                        + "<strong>New Status:</strong> " + newStatus + "</p>"
-                        + "<p>We will notify you of further updates.<br>Thank you.</p>";
+                "<div style='font-family:Arial;background:#f4f4f4;padding:20px;'>"
+                        + "<div style='background:white;padding:20px;border-radius:8px;border:1px solid #ddd;'>"
+                        + "<h2 style='color:#0066cc;text-align:center;'>Complaint Status Update</h2>"
+                        + "<p>Hello <strong>" + name + "</strong>,</p>"
+                        + "<p>Your complaint status has been updated.</p>"
+                        + "<hr>"
+                        + "<p><strong>Complaint ID:</strong> <span style='color:#d9534f'><strong>" + complaintId + "</strong></span></p>"
+                        + "<p><strong>New Status:</strong> " + newStatus + "</p>"
+                        + "<hr>"
+                        + "<p style='font-size:13px;color:#777;text-align:center;'>"
+                        + "We will notify you of further updates.<br>"
+                        + "Thank you.<br>"
+                        + "Complaint Support Team<br>"
+                        + "Smart Complaint System"
+                        + "</p>"
+                        + "</div></div>";
 
         sendEmail(email, "Complaint Status Updated - ID " + complaintId, body);
     }

@@ -1,14 +1,21 @@
 package com.smartcomplaint.complaintsystem.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import com.smartcomplaint.complaintsystem.model.AdminLogin;
 import com.smartcomplaint.complaintsystem.model.Complaint;
 import com.smartcomplaint.complaintsystem.repository.ComplaintRepository;
 import com.smartcomplaint.complaintsystem.service.EmailService;
+
 import jakarta.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/admin")
@@ -34,8 +41,8 @@ public class AdminController {
     // -------------------------
     @PostMapping("/login")
     public String login(@ModelAttribute("adminLogin") AdminLogin adminLogin,
-            Model model,
-            HttpSession session) {
+                        Model model,
+                        HttpSession session) {
 
         String USER = "admin";
         String PASS = "admin123";
@@ -93,12 +100,12 @@ public class AdminController {
     }
 
     // -------------------------
-    // UPDATE STATUS + SEND EMAIL IF RESOLVED
+    // UPDATE STATUS + SEND EMAIL
     // -------------------------
     @PostMapping("/complaints/update-status/{id}")
     public String updateStatus(@PathVariable Long id,
-            @RequestParam("status") String status,
-            HttpSession session) {
+                               @RequestParam("status") String status,
+                               HttpSession session) {
 
         if (session.getAttribute("adminLogged") == null) {
             return "redirect:/admin/login";
@@ -110,18 +117,17 @@ public class AdminController {
         complaint.setStatus(status);
         complaintRepository.save(complaint);
 
-        // -------------------------
-        // SEND EMAIL IF RESOLVED
-        // -------------------------
-        if (status.equals("Resolved")) {
-            String subject = "Your Complaint Has Been Resolved";
-            String body = "Dear " + complaint.getName() + ",\n\n"
-                    + "Your complaint has been successfully resolved.\n\n"
-                    + "Complaint ID: " + complaint.getId() + "\n"
-                    + "Message: " + complaint.getMessage() + "\n\n"
-                    + "Thank you for using the Smart Complaint System!\n";
-
-            emailService.sendEmail(complaint.getEmail(), subject, body);
+        // SEND EMAIL ALWAYS — not only when resolved
+        try {
+            emailService.sendStatusUpdated(
+                    complaint.getName(),
+                    complaint.getEmail(),
+                    complaint.getId(),
+                    status
+            );
+            System.out.println("📩 Status update email sent");
+        } catch (Exception e) {
+            System.out.println("❗ Error sending status update email: " + e.getMessage());
         }
 
         return "redirect:/admin/complaints?updated=true";
@@ -137,7 +143,29 @@ public class AdminController {
             return "redirect:/admin/login";
         }
 
-        complaintRepository.deleteById(id);
+        Complaint complaint = complaintRepository.findById(id)
+                .orElse(null);
+
+        if (complaint != null) {
+
+            try {
+                String subject = "Your Complaint Has Been Removed";
+
+                String body =
+                        "<p>Hello <strong>" + complaint.getName() + "</strong>,</p>"
+                                + "<p>Your complaint has been deleted by the admin.</p>"
+                                + "<p>Regards,<br>Complaint Support Team</p>";
+
+                emailService.sendEmail(complaint.getEmail(), subject, body);
+                System.out.println("📩 Delete notification email sent");
+
+            } catch (Exception e) {
+                System.out.println("❗ Error sending delete email: " + e.getMessage());
+            }
+
+            complaintRepository.deleteById(id);
+        }
+
         return "redirect:/admin/complaints?deleted=true";
     }
 

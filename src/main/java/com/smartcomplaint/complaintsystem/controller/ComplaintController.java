@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.smartcomplaint.complaintsystem.model.Complaint;
 import com.smartcomplaint.complaintsystem.repository.ComplaintRepository;
@@ -34,17 +35,16 @@ public class ComplaintController {
     @PostMapping("/submit")
     public String submitComplaint(@ModelAttribute Complaint complaint, Model model) {
 
-        complaintRepository.save(complaint);
+        Complaint saved = complaintRepository.save(complaint);
 
         try {
             emailService.sendComplaintReceived(
-                    complaint.getName(),
-                    complaint.getEmail(),
-                    complaint.getId(),
-                    complaint.getDepartment(),
-                    complaint.getMessage()
+                    saved.getName(),
+                    saved.getEmail(),
+                    saved.getId(),
+                    saved.getDepartment(),
+                    saved.getMessage()
             );
-
             System.out.println("📩 Complaint received email sent");
         } catch (Exception e) {
             System.out.println("❗ Error sending complaint received email: " + e.getMessage());
@@ -73,13 +73,12 @@ public class ComplaintController {
 
     // Update complaint status + send email
     @PostMapping("/update-status/{id}")
-    public String updateComplaintStatus(@PathVariable Long id, @ModelAttribute Complaint updatedComplaint) {
+    public String updateComplaintStatus(@PathVariable Long id, @RequestParam("status") String newStatus) {
 
         Complaint complaint = complaintRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid complaint ID: " + id));
 
-        // set new status
-        complaint.setStatus(updatedComplaint.getStatus());
+        complaint.setStatus(newStatus);
         complaintRepository.save(complaint);
 
         try {
@@ -87,11 +86,9 @@ public class ComplaintController {
                     complaint.getName(),
                     complaint.getEmail(),
                     complaint.getId(),
-                    complaint.getStatus()
+                    newStatus
             );
-
             System.out.println("📩 Status update email sent");
-
         } catch (Exception e) {
             System.out.println("❗ Error sending status update email: " + e.getMessage());
         }
@@ -99,7 +96,7 @@ public class ComplaintController {
         return "redirect:/complaints/list";
     }
 
-    // Delete complaint + email
+    // Delete complaint + send email
     @GetMapping("/delete/{id}")
     public String deleteComplaint(@PathVariable Long id) {
 
@@ -117,9 +114,10 @@ public class ComplaintController {
                                 + "<p>Regards,<br>Complaint Support Team</p>";
 
                 emailService.sendEmail(complaint.getEmail(), subject, message);
+                System.out.println("📩 Complaint deleted email sent");
 
             } catch (Exception e) {
-                System.out.println("❗ Error sending delete email: " + e.getMessage());
+                System.out.println(" Error sending delete email: " + e.getMessage());
             }
 
             complaintRepository.deleteById(id);

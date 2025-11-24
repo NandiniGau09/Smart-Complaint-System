@@ -7,8 +7,8 @@
       font-family: Arial, sans-serif;
       color: #333;
       background: #f4f4f4;
-      padding: 0;
       margin: 0;
+      padding: 0;
     }
     .container {
       background: #ffffff;
@@ -21,7 +21,6 @@
     h2 {
       text-align: center;
       color: #0066cc;
-      margin-bottom: 20px;
     }
     .info {
       font-size: 15px;
@@ -36,29 +35,23 @@
       padding-top: 10px;
       text-align: center;
     }
-    strong {
-      color: #000;
-    }
   </style>
 </head>
 <body>
   <div class="container">
 
-    <h2>Your Complaint Has Been Received</h2>
+    <h2>Complaint Status Update</h2>
 
     <p>Hello <strong>{{name}}</strong>,</p>
 
-    <p>Your complaint has been successfully submitted.</p>
+    <p>The status of your complaint has been updated.</p>
 
     <div class="info">
-      <strong>Complaint ID:</strong> <span style="color:#d9534f;"><strong>{{id}}</strong></span> <br><br>
-      <strong>Name:</strong> {{name}} <br>
-      <strong>Email:</strong> {{email}} <br>
-      <strong>Message:</strong> {{message}} <br>
-      <strong>Department:</strong> {{department}}
+      <strong>Complaint ID:</strong> <span style="color:#d9534f;"><strong>{{id}}</strong></span> <br>
+      <strong>New Status:</strong> {{status}}
     </div>
 
-    <p>Thank you for reaching out.</p>
+    <p>We will notify you for further updates.</p>
 
     <div class="footer">
       Regards,<br>
